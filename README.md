@@ -12,6 +12,7 @@ requires no password using something like ssh-copy-id or kinit.
 
 * sudo is required for various administrative operations
 (install & remove rpms, view logs, etc.)
+
 ### Usage
 Push code[1], build rpms, remove existing rpms and install
 vdsm on fe20.example.com and el6.example.com,
