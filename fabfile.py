@@ -107,20 +107,25 @@ def deploy_engine(src='${HOME}/dev/ovirt-engine'):
 
 @fabric.api.parallel
 def deploy_extension(src='${HOME}/dev/ovirt-engine-extension-aaa-jdbc'):
+    ext_name = os.path.basename(src)
     _deploy(
         {
             'src': src,
-            'dest': '~/.ovirt_fabric/ovirt-engine-extension',
-            'put_method': GIT,
-            'dependencies': (
-                "apache-commons-codec",
-                "ovirt-engine-extensions-api",
-                "junit",
-                "slf4j",
+            'dest': os.path.join(
+                '~/.ovirt_fabric/',
+                ext_name
             ),
+            'dependencies': (
+            "apache-commons-codec",
+            "ovirt-engine-extensions-api",
+            "junit",
+            "slf4j",
+            "postgresql-jdbc",
+            ),
+            'put_method': GIT,
 
             'rpms': (
-                ('noarch', os.path.basename(src)),
+                ('noarch', ext_name),
             ),
             'remote_cmd': (
                 "make dist",
@@ -130,6 +135,7 @@ def deploy_extension(src='${HOME}/dev/ovirt-engine-extension-aaa-jdbc'):
                 "sudo service ovirt-engine stop",
                 "sudo su - -c \"echo ''  > /var/log/ovirt-engine/engine.log\"",
                 "sudo su - -c \"echo ''  > /var/log/ovirt-engine/server.log\"",
+                "sudo cp ~/.ovirt_fabric/ovirt-engine.xml.in /usr/share/ovirt-engine/services/ovirt-engine/",
                 "sudo service ovirt-engine start",
                 "sudo tail -f /var/log/ovirt-engine/engine.log",
             )

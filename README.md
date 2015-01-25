@@ -1,10 +1,10 @@
-Deploy, build & and install ovirt & vdsm packages on a remote host from src.
+Streamline ovirt & vdsm developer workflows.
 
 ### Perquisites
 * fabric 
 ~~~.bash
 yum install fabric     # redhat
-apt-get install fabric # debian
+apt-get install fabric # debian, untested fabric version
 ~~~
 
 * make sure the remote host is reachable by ssh and that it
@@ -28,33 +28,14 @@ fab -H localhost deploy_engine:src=/home/mtayer/ovirt-engine
 ~~~
 
 Next two are used to install build dependencies on remote.
-Currently only fe20 supported.
+Currently only fe20 supported[2].
 ~~~.bash
 fab -H fe20.example.com engine_developers_fe20
 fab -H fe20.example.com vdsm_developers_fe20
 ~~~
 
-### Git post-commit hook
-
-~~~.bash
-vim .git/hooks/post-commit
-~~~
-
-~~~.bash
-OLD=$(pwd)
-cd ~/dev/ovirt-fabric 
-
-function finish {
-    cd $OLD;  
-}
-trap finish EXIT
-
-fab -H mtayer-host1.usersys.redhat.com deploy_extension
-~~~
-
-~~~.bash
-chmod u+x .git/hooks/post-commit
-~~~
+### Git hook
+TBD
 
 #### TODO
 * work with fab as library and not with a fabfiles. 
@@ -64,3 +45,5 @@ chmod u+x .git/hooks/post-commit
 [1] code is pushed using git, since vdsm uses git tags for it's
 build.
 
+[2] to install build dependencies on other systems follow
+http://www.ovirt.org/Vdsm_Developers
